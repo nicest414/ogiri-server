@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大喜利お題募集 - 面白い死因を募集！</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .form-section {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        .examples {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .examples h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .examples ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .examples li {
+            background: white;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-size: 0.95rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 大喜利お題募集！</h1>
+            <p>あなたの面白いアイデアで、みんなを笑わせませんか？<br>
+            どんなお題でも大歓迎です！</p>
+        </div>
+
+        <div class="form-section">
+            <div class="examples">
+                <h3>📝 お題の例</h3>
+                <ul>
+                    <li>「スマホの充電が切れた時に言いがちなこと」</li>
+                    <li>「コンビニで『ありがとうございました』と言われた時の変な返し方」</li>
+                    <li>「エレベーターで気まずい沈黙を破る一言」</li>
+                    <li>「猫が人間の言葉を話せるようになったら最初に言いそうなこと」</li>
+                </ul>
+            </div>
+
+            <form id="themeForm">
+                <div class="form-group">
+                    <label for="title">🎯 お題タイトル <span style="color: #e74c3c;">*</span></label>
+                    <input type="text" id="title" name="title" placeholder="例：『○○の時に言いがちなこと』" maxlength="100" required>
+                    <div class="char-counter" id="titleCounter">0/100</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">💡 お題の説明・補足</label>
+                    <textarea id="description" name="description" placeholder="お題の詳しい説明や、回答のヒントがあれば入力してください。（任意）" maxlength="500"></textarea>
+                    <div class="char-counter" id="descCounter">0/500</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="createdBy">👤 投稿者名 <span style="color: #e74c3c;">*</span></label>
+                    <input type="text" id="createdBy" name="createdBy" placeholder="あなたのニックネーム" maxlength="50" required>
+                    <div class="char-counter" id="nameCounter">0/50</div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    🚀 お題を投稿する
+                </button>
+            </form>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>投稿中...</p>
+            </div>
+
+            <div class="result" id="result"></div>
+        </div>
+
+        <div class="footer">
+            <p>💖 素敵なお題をありがとうございます！<br>
+            投稿されたお題は大喜利コミュニティで活用させていただきます。</p>
+        </div>
+    </div>
+
+    <script>
+        // 環境に応じたAPIベースURLの自動判定
+        const apiBaseUrl = (() => {
+            const currentHost = window.location.host;
+            const currentProtocol = window.location.protocol;
+            
+            // Renderの環境（.onrender.com）か、localhost以外の場合は現在のホストを使用
+            if (currentHost.includes('onrender.com') || !currentHost.includes('localhost')) {
+                return `${currentProtocol}//${currentHost}/api`;
+            }
+            // ローカル開発環境の場合
+            return "http://localhost:8080/api";
+        })();
+
+        // 文字数カウンター
+        function setupCharCounter(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            
+            input.addEventListener('input', function() {
+                const currentLength = this.value.length;
+                counter.textContent = `${currentLength}/${maxLength}`;
+                
+                if (currentLength > maxLength * 0.9) {
+                    counter.style.color = '#e74c3c';
+                } else if (currentLength > maxLength * 0.7) {
+                    counter.style.color = '#f39c12';
+                } else {
+                    counter.style.color = '#6c757d';
+                }
+            });
+        }
+
+        // 文字数カウンターを設定
+        setupCharCounter('title', 'titleCounter', 100);
+        setupCharCounter('description', 'descCounter', 500);
+        setupCharCounter('createdBy', 'nameCounter', 50);
+
+        // フォーム送信処理
+        document.getElementById('themeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            
+            // フォームデータを取得
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const createdBy = document.getElementById('createdBy').value.trim();
+            
+            // バリデーション
+            if (!title) {
+                showResult('error', 'お題タイトルを入力してください。');
+                return;
+            }
+            
+            if (!createdBy) {
+                showResult('error', '投稿者名を入力してください。');
+                return;
+            }
+            
+            // 送信開始
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${apiBaseUrl}/themes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description || '説明なし',
+                        created_by: createdBy
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('success', `🎉 お題「${title}」が正常に投稿されました！<br>お題ID: ${data.data.id}<br>ありがとうございます！`);
+                    // フォームをリセット
+                    document.getElementById('themeForm').reset();
+                    // 文字数カウンターもリセット
+                    document.getElementById('titleCounter').textContent = '0/100';
+                    document.getElementById('descCounter').textContent = '0/500';
+                    document.getElementById('nameCounter').textContent = '0/50';
+                } else {
+                    showResult('error', `投稿に失敗しました: ${data.error || '不明なエラー'}`);
+                }
+            } catch (error) {
+                showResult('error', `ネットワークエラーが発生しました: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        function showResult(type, message) {
+            const result = document.getElementById('result');
+            result.className = `result ${type}`;
+            result.innerHTML = message;
+            result.style.display = 'block';
+            
+            // 成功の場合は3秒後に自動で非表示
+            if (type === 'success') {
+                setTimeout(() => {
+                    result.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // デバッグ用：使用中のAPIベースURLをコンソールに表示
+        console.log('API Base URL:', apiBaseUrl);
+    </script>
+</body>
+</html>
