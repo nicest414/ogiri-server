@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/ketya/ogiri-server/internal/data"
-	"github.com/ketya/ogiri-server/internal/handlers"
+	"github.com/nicest414/ogiri-server/internal/data"
+	"github.com/nicest414/ogiri-server/internal/handlers"
 )
 
 const (

@@ -1,4 +1,4 @@
-module github.com/ketya/ogiri-server
+module github.com/nicest414/ogiri-server
 
 go 1.20
 
