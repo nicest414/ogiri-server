@@ -12,6 +12,7 @@ import (
 
 const (
 	defaultPort = "8080"
+	dataFile    = "ogiri_data.json"  // JSONファイル名
 )
 
 // CORSミドルウェアを実装
@@ -38,9 +39,9 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
-
-	// データストアを初期化
-	store := data.NewInMemoryStore()
+	// JSONファイルベースのデータストアを初期化
+	store := data.NewJSONStore(dataFile)
+	log.Printf("📁 データファイル: %s", dataFile)
 
 	// ハンドラー初期化
 	h := handlers.NewHandler(store)
@@ -68,13 +69,14 @@ func main() {
 	corsFileServer := enableCORS(fileServer)
 	
 	http.Handle("/", corsFileServer)
-	http.Handle("/api/", corsRouter)
-	// サーバー起動
+	http.Handle("/api/", corsRouter)	// サーバー起動
 	log.Printf("--------------------------------------------------------")
 	log.Printf("🎉 大喜利サーバーを起動中...ポート: %s", port)
+	log.Printf("💾 データ保存方式: JSONファイル (%s)", dataFile)
 	log.Printf("🌐 以下のURLでアクセスできます:")
 	log.Printf("   - トップページ: http://localhost:%s/", port)
 	log.Printf("   - APIテスター: http://localhost:%s/api_tester.html", port)
+	log.Printf("   - お題募集: http://localhost:%s/theme_submission.html", port)
 	log.Printf("--------------------------------------------------------")
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

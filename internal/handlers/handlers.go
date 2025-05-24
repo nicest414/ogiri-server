@@ -58,7 +58,14 @@ func (h *Handler) ListThemes(w http.ResponseWriter, r *http.Request) {
 		sendErrorResponse(w, http.StatusInternalServerError, "お題の取得に失敗しました")
 		return
 	}
-	sendJSONResponse(w, http.StatusOK, themes)
+	
+	// 統一されたレスポンス形式
+	response := map[string]interface{}{
+		"success": true,
+		"message": "お題一覧の取得に成功しました",
+		"data":    themes,
+	}
+	sendJSONResponse(w, http.StatusOK, response)
 }
 
 // GetTheme は特定のお題を取得
@@ -92,19 +99,20 @@ func (h *Handler) CreateTheme(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// IDと時間の設定
-	now := time.Now()
-	theme.ID = generateID()
-	theme.CreatedAt = now
-	theme.UpdatedAt = now
-	theme.Active = true
+	// IDと時間の設定はJSONStoreで行うため、ここでは設定しない
 
 	if err := h.store.CreateTheme(&theme); err != nil {
 		sendErrorResponse(w, http.StatusInternalServerError, "お題の作成に失敗しました")
 		return
 	}
 
-	sendJSONResponse(w, http.StatusCreated, theme)
+	// 成功レスポンス構造を修正
+	response := map[string]interface{}{
+		"success": true,
+		"message": "お題が正常に作成されました",
+		"data":    theme,
+	}
+	sendJSONResponse(w, http.StatusCreated, response)
 }
 
 // UpdateTheme はお題を更新
