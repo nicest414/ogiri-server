@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大喜利API テスト</title>    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            color: #4CAF50;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            min-height: 100px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: #555;
+        }
+    </style>
+</head>
+<body>    <h1>大喜利API テスト</h1>
+    
+    <nav style="text-align: center; margin-bottom: 20px;">
+        <a href="#themes-list" style="margin: 0 10px; text-decoration: none; color: #4CAF50;">お題一覧</a>
+        <a href="#create-theme" style="margin: 0 10px; text-decoration: none; color: #4CAF50;">お題作成</a>
+        <a href="#get-theme" style="margin: 0 10px; text-decoration: none; color: #4CAF50;">お題詳細</a>
+        <a href="#answers-list" style="margin: 0 10px; text-decoration: none; color: #4CAF50;">回答一覧</a>
+        <a href="#create-answer" style="margin: 0 10px; text-decoration: none; color: #4CAF50;">回答投稿</a>
+    </nav>
+
+    <div class="section" id="themes-list">
+        <h2>お題一覧を取得</h2>
+        <button onclick="getThemes()">お題一覧を取得</button>
+        <div class="results" id="themes-result"></div>
+    </div>    <div class="section" id="create-theme">
+        <h2>新しいお題を作成</h2>
+        <div style="margin-bottom: 15px;">
+            <label for="theme-title" style="display: block; margin-bottom: 5px; font-weight: bold;">お題タイトル:</label>
+            <input type="text" id="theme-title" placeholder="例: もし猫が人間の言葉を話せるようになったら最初に言いそうなこと" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="theme-description" style="display: block; margin-bottom: 5px; font-weight: bold;">お題の説明:</label>
+            <textarea id="theme-description" placeholder="例: 猫が突然人間の言葉を話せるようになった時、真っ先に言いそうなセリフは？" style="width: 100%; height: 80px;"></textarea>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="theme-creator" style="display: block; margin-bottom: 5px; font-weight: bold;">作成者名:</label>
+            <input type="text" id="theme-creator" placeholder="例: 猫好き" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <button onclick="createThemeFromForm()">お題を作成</button>
+        <div class="results" id="create-result"></div>
+    </div>    <div class="section" id="get-theme">
+        <h2>特定のお題を取得</h2>
+        <input type="text" id="theme-id" placeholder="お題のIDを入力">
+        <button onclick="getTheme()">お題を取得</button>
+        <div class="results" id="theme-result"></div>
+    </div>    <div class="section" id="answers-list">
+        <h2>お題に対する回答一覧</h2>
+        <input type="text" id="answers-theme-id" placeholder="お題のIDを入力">
+        <button onclick="getAnswers()">回答一覧を取得</button>
+        <div class="results" id="answers-result"></div>
+    </div>    <div class="section" id="create-answer">
+        <h2>新しい回答を投稿</h2>
+        <div style="margin-bottom: 15px;">
+            <label for="submit-theme-id" style="display: block; margin-bottom: 5px; font-weight: bold;">お題ID:</label>
+            <input type="text" id="submit-theme-id" placeholder="お題のIDを入力" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="answer-content" style="display: block; margin-bottom: 5px; font-weight: bold;">回答内容:</label>
+            <textarea id="answer-content" placeholder="例: 「いつも缶詰の中身、少なすぎない？」" style="width: 100%; height: 80px;"></textarea>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="answer-creator" style="display: block; margin-bottom: 5px; font-weight: bold;">回答者名:</label>
+            <input type="text" id="answer-creator" placeholder="例: ネコ好き" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <button onclick="submitAnswerFromForm()">回答を投稿</button>
+        <div class="results" id="submit-result"></div>
+    </div>
+
+    <script>
+        const apiBaseUrl = "http://localhost:8080/api";
+
+        async function fetchApi(endpoint, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                };
+
+                if (body) {
+                    options.body = typeof body === 'string' ? body : JSON.stringify(body);
+                }
+
+                const response = await fetch(`${apiBaseUrl}${endpoint}`, options);
+                let data;
+                
+                if (response.status !== 204) { // No content
+                    const text = await response.text();
+                    try {
+                        data = JSON.parse(text);
+                    } catch {
+                        data = text;
+                    }
+                }
+
+                return {
+                    status: response.status,
+                    data,
+                    ok: response.ok
+                };
+            } catch (error) {
+                console.error("API呼び出し中にエラーが発生しました:", error);
+                return {
+                    status: 500,
+                    data: { error: error.message },
+                    ok: false
+                };
+            }
+        }
+
+        async function getThemes() {
+            const result = document.getElementById("themes-result");
+            result.textContent = "読み込み中...";
+            
+            const response = await fetchApi("/themes");
+            result.textContent = JSON.stringify(response.data, null, 2);
+        }        async function createThemeFromForm() {
+            const result = document.getElementById("create-result");
+            const title = document.getElementById("theme-title").value.trim();
+            const description = document.getElementById("theme-description").value.trim();
+            const createdBy = document.getElementById("theme-creator").value.trim();
+            
+            result.textContent = "送信中...";
+            
+            if (!title) {
+                result.textContent = "エラー: お題タイトルは必須です";
+                return;
+            }
+            
+            const themeData = {
+                title: title,
+                description: description,
+                created_by: createdBy
+            };
+            
+            try {
+                const response = await fetchApi("/themes", "POST", themeData);
+                result.textContent = JSON.stringify(response.data, null, 2);
+            } catch (e) {
+                result.textContent = "エラー: " + e.message;
+            }
+        }
+        
+        // レガシーメソッド（互換性のために残す）
+        async function createTheme() {
+            const result = document.getElementById("create-result");
+            const themeData = document.getElementById("new-theme")?.value;
+            
+            if (!themeData) {
+                createThemeFromForm();
+                return;
+            }
+            
+            result.textContent = "送信中...";
+            
+            try {
+                // 入力内容がJSON形式かチェック
+                JSON.parse(themeData);
+                
+                const response = await fetchApi("/themes", "POST", themeData);
+                result.textContent = JSON.stringify(response.data, null, 2);
+            } catch (e) {
+                result.textContent = "エラー: 無効なJSON形式です。" + e.message;
+            }
+        }
+
+        async function getTheme() {
+            const result = document.getElementById("theme-result");
+            const themeId = document.getElementById("theme-id").value.trim();
+            
+            if (!themeId) {
+                result.textContent = "お題IDを入力してください";
+                return;
+            }
+            
+            result.textContent = "読み込み中...";
+            const response = await fetchApi(`/themes/${themeId}`);
+            result.textContent = JSON.stringify(response.data, null, 2);
+        }
+
+        async function getAnswers() {
+            const result = document.getElementById("answers-result");
+            const themeId = document.getElementById("answers-theme-id").value.trim();
+            
+            if (!themeId) {
+                result.textContent = "お題IDを入力してください";
+                return;
+            }
+            
+            result.textContent = "読み込み中...";
+            const response = await fetchApi(`/themes/${themeId}/answers`);
+            result.textContent = JSON.stringify(response.data, null, 2);
+        }        async function submitAnswerFromForm() {
+            const result = document.getElementById("submit-result");
+            const themeId = document.getElementById("submit-theme-id").value.trim();
+            const content = document.getElementById("answer-content").value.trim();
+            const createdBy = document.getElementById("answer-creator").value.trim();
+            
+            if (!themeId) {
+                result.textContent = "お題IDを入力してください";
+                return;
+            }
+            
+            if (!content) {
+                result.textContent = "回答内容は必須です";
+                return;
+            }
+            
+            result.textContent = "送信中...";
+            
+            const answerData = {
+                content: content,
+                created_by: createdBy
+            };
+            
+            try {
+                const response = await fetchApi(`/themes/${themeId}/answers`, "POST", answerData);
+                result.textContent = JSON.stringify(response.data, null, 2);
+            } catch (e) {
+                result.textContent = "エラー: " + e.message;
+            }
+        }
+        
+        // レガシーメソッド（互換性のために残す）
+        async function submitAnswer() {
+            const result = document.getElementById("submit-result");
+            const themeId = document.getElementById("submit-theme-id").value.trim();
+            const answerData = document.getElementById("new-answer")?.value;
+            
+            if (!themeId) {
+                result.textContent = "お題IDを入力してください";
+                return;
+            }
+            
+            if (!answerData) {
+                submitAnswerFromForm();
+                return;
+            }
+            
+            result.textContent = "送信中...";
+            
+            try {
+                // 入力内容がJSON形式かチェック
+                JSON.parse(answerData);
+                
+                const response = await fetchApi(`/themes/${themeId}/answers`, "POST", answerData);
+                result.textContent = JSON.stringify(response.data, null, 2);
+            } catch (e) {
+                result.textContent = "エラー: 無効なJSON形式です。" + e.message;
+            }        }
+    </script>
+    
+    <footer style="text-align: center; margin-top: 40px; padding: 20px; color: #777; border-top: 1px solid #ddd;">
+        <p>© 2025 大喜利サーバー</p>
+        <a href="#" style="color: #4CAF50; text-decoration: none;">ページ上部へ戻る↑</a>
+    </footer>
+</body>
+</html>
