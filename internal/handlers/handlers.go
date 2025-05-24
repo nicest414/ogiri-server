@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/ketya/ogiri-server/internal/data"
+	"github.com/nicest414/ogiri-server/internal/data"
 
 	"crypto/rand"
 	"encoding/hex"
