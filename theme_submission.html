@@ -9,26 +9,22 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
+        }        body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
-        }
-
-        .container {
+        }        .container {
             max-width: 600px;
             margin: 0 auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
             overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+        }.header {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53, #ffa726);
             color: white;
             padding: 40px 30px;
             text-align: center;
@@ -111,11 +107,9 @@
             border-radius: 8px;
             border-left: 4px solid #667eea;
             font-size: 0.95rem;
-        }
-
-        .submit-btn {
+        }        .submit-btn {
             width: 100%;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
             color: white;
             border: none;
             padding: 18px 30px;
