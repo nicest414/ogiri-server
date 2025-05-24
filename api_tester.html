@@ -128,10 +128,22 @@
         </div>
         <button onclick="submitAnswer()">回答を投稿</button>
         <div class="results" id="submit-result"></div>
-    </div>
+    </div>    <script>
+        // 環境に応じたAPIベースURLの自動判定
+        const apiBaseUrl = (() => {
+            const currentHost = window.location.host;
+            const currentProtocol = window.location.protocol;
+            
+            // Renderの環境（.onrender.com）か、localhost以外の場合は現在のホストを使用
+            if (currentHost.includes('onrender.com') || !currentHost.includes('localhost')) {
+                return `${currentProtocol}//${currentHost}/api`;
+            }
+            // ローカル開発環境の場合
+            return "http://localhost:8080/api";
+        })();
 
-    <script>
-        const apiBaseUrl = "http://localhost:8080/api";
+        // デバッグ用：使用中のAPIベースURLをコンソールに表示
+        console.log('API Base URL:', apiBaseUrl);
 
         async function fetchApi(endpoint, method = 'GET', body = null) {
             try {

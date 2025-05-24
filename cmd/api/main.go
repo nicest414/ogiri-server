@@ -59,14 +59,15 @@ func main() {
 	r.HandleFunc("/api/themes/{themeID}/answers", h.SubmitAnswer).Methods("POST", "OPTIONS")
 	r.HandleFunc("/api/themes/{themeID}/answers/{id}", h.GetAnswer).Methods("GET", "OPTIONS")
 	r.HandleFunc("/api/themes/{themeID}/answers/{id}", h.UpdateAnswer).Methods("PUT", "OPTIONS")
-	r.HandleFunc("/api/themes/{themeID}/answers/{id}", h.DeleteAnswer).Methods("DELETE", "OPTIONS")
-	// CORSミドルウェアを適用
+	r.HandleFunc("/api/themes/{themeID}/answers/{id}", h.DeleteAnswer).Methods("DELETE", "OPTIONS")	// CORSミドルウェアを適用
 	corsRouter := enableCORS(r)
 
 	// 静的ファイルハンドラー（HTMLテスター用）
 	// カレントディレクトリからの静的ファイル提供
 	fileServer := http.FileServer(http.Dir("."))
-	http.Handle("/", fileServer)
+	corsFileServer := enableCORS(fileServer)
+	
+	http.Handle("/", corsFileServer)
 	http.Handle("/api/", corsRouter)
 	// サーバー起動
 	log.Printf("--------------------------------------------------------")
